@@ -22,6 +22,7 @@ program: statement
 
 statement: OPCODE register COMMA register COMMA register NEWLINE
         | OPCODE register COMMA register COMMA IMM_I NEWLINE
+        | OPCODE DOT OP_type register COMMA register COMMA register COMMA register NEWLINE
         | NEWLINE
 
 NOTE: We parse the porgram line by line Hence we don't
@@ -134,7 +135,7 @@ def p_statement_U_UJ(p):
             raise SyntaxError
         p[0] = {
             'opcode': p[1],
-            'rd': p[2],
+            'rd': p[2],         # 
             'imm': imm,
             'lineno': p.lineno(1)
         }
@@ -179,8 +180,68 @@ def p_statement_SB__JALR_LABEL(p):
             'label': p[6],
             'lineno': p.lineno(1)
         }
+#**************VECTORPARSING RULE ADDED BY NIKOLA*******************
+def p_statement_vector_arith(p):
+    'statement : OPCODE OP_type register COMMA register COMMA register COMMA IMMEDIATE NEWLINE'   
+    if p[1] not in mcc.V_INTEGER_INSTRUCTIONS:
+        cp.cprint_fail("Error:" + str(p.lineno(1)) +
+                       ": Incorrect opcode or arguments")
+        raise SyntaxError
+    if (int(p[9]) > 1 or int(p[9]) < 0):
+        cp.cprint_fail("Error:" + str(p.lineno(1)) +
+                       ": vm should have value 0 or 1")
+        raise SyntaxError
+    p[0] = {
+        'opcode': p[1],
+        'OP_type': p[2],
+        'vd': p[3],
+        'op1': p[5],
+        'op2': p[7],
+        'vm': p[9],
+        'lineno': p.lineno(1)
+    }
+    #print(p[0])
+    
+def p_statement_vector_unit_strided_load_store(p):
+    'statement : OPCODE OP_type register COMMA OPEN_BRACE register CLOSE_BRACE COMMA IMMEDIATE NEWLINE'
+    if p[1] not in (mcc.ALL_V_Ld_St_unit_stride_instr):
+        cp.cprint_fail("Error:" + str(p.lineno(1)) +
+                       ": Incorrect opcode or arguments")
+        raise SyntaxError
+    if (int(p[9]) > 1 or int(p[9]) < 0):
+        cp.cprint_fail("Error:" + str(p.lineno(1)) +
+                       ": vm should have value 0 or 1")
+        raise SyntaxError
+    p[0] = {
+        'opcode': p[1],
+        'OP_type': p[2],
+        'vd': p[3],
+        'rs1': p[6],        
+        'vm': p[9],
+        'lineno': p.lineno(1)
+    }
 
+def p_statement_vector_strided_indexed_load_store(p):
+    'statement : OPCODE OP_type register COMMA OPEN_BRACE register CLOSE_BRACE COMMA register COMMA IMMEDIATE NEWLINE'
+    if p[1] not in (mcc.ALL_V_Ld_St_stride_instr or mcc.ALL_V_Ld_St_INDEXED_instr):
+        cp.cprint_fail("Error:" + str(p.lineno(1)) +
+                       ": Incorrect opcode or arguments")
+        raise SyntaxError
+    if (int(p[11]) > 1 or int(p[11]) < 0):
+        cp.cprint_fail("Error:" + str(p.lineno(1)) +
+                       ": vm should have value 0 or 1")
+        raise SyntaxError
+    p[0] = {
+        'opcode': p[1],
+        'OP_type': p[2],
+        'vd': p[3],
+        'rs1': p[6],        
+        'op2': p[9],
+        'vm' : p[11],
+        'lineno': p.lineno(1)
+    }
 
+#*******************************************************************
 def p_register(p):
     'register : REGISTER'
     r = p[1]
@@ -196,6 +257,9 @@ def p_register(p):
 def p_statement_none(p):
     'statement : NEWLINE'
     p[0] = None
+    
+
+
 
 
 def get_imm_I(imm10, lineno):

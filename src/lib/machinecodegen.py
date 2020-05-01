@@ -1,4 +1,4 @@
-#
+
 # @author:Don Dennis
 # MachineCodeGen.py
 #
@@ -398,6 +398,177 @@ class MachineCodeGenerator:
         }
         return bin_str, tok_dict
 
+    #****************Modifications writen by Nikola******************************
+    def op_vector_arith(self, tokens):
+        '''
+        funct6  vm op1 op2 funct3  vxd  opcode
+        '''
+        opcode = tokens['opcode']
+        OP_type = tokens['OP_type']
+        bin_opcode = None
+        funct3 = None
+        funct6 = None
+        op1 = None
+        op2 = None
+        vd = None
+        bin_op1 = None
+        bin_op2 = None
+        bin_vd = None
+        bin_vm = tokens['vm']   
+        try:
+            funct6 = self.CONST.FUNCT6_V_ARITH_INTEGER[opcode]    
+            funct3 = self.CONST.FUNCT3_V_ARITH_INTEGER[OP_type]
+            bin_opcode = self.CONST.V_BOP_ARITH
+            op1 = tokens['op1']
+            op2 = tokens['op2']
+            vd = tokens['vd']
+            bin_op1 = self.get_bin_register(op1)
+            bin_op2 = self.get_bin_register(op2)
+            bin_vd = self.get_bin_register(vd)
+        except:
+            cp.cprint_fail("Internal Error: ARITH: could not parse" +
+                           "tokens in " + str(tokens['lineno']))
+            exit()
+
+        bin_str = funct6 + bin_vm + bin_op2 + bin_op1 + funct3 + bin_vd + bin_opcode
+        assert(len(bin_str) == 32)
+
+        tok_dict = {
+            'opcode': bin_opcode,
+            'funct3': funct3,
+            'funct6': funct6,
+            'op1': bin_op1,
+            'vd': bin_vd,
+            'op2': bin_op2,
+            'vm': bin_vm
+        }
+        return bin_str, tok_dict
+
+
+    def op_v_ld_st_unit_stride(self, tokens):
+        '''
+        nf  mop vm (lu/su)mop rs1 width vd opcode
+        '''        
+        opcode = tokens['opcode']
+        OP_type = tokens['OP_type']
+        bin_opcode = None
+        bin_nf = None
+        bin_mop = None
+        bin_lu_su_mop = None
+        bin_width = None
+        rs1 = None
+        vd = None
+        bin_rs1 = None        
+        bin_vd = None
+        bin_vm = tokens['vm']   
+        try:
+            bin_nf = '000' # hardcoded(other values wont be needed)            
+            if (opcode in self.CONST.V_UNIT_STRIDE_ZE_LOAD):                
+                bin_mop = '000'
+                bin_opcode = self.CONST.V_BOP_LOAD
+            elif(opcode in self.CONST.V_UNIT_STRIDE_SE_LOAD):
+                bin_mop = '100'
+                bin_opcode = self.CONST.V_BOP_LOAD
+            else:
+                bin_mop = '000'
+                bin_opcode = self.CONST.V_BOP_STORE
+            bin_lu_su_mop = '00000' # hardcoded(other values wont be needed)
+            bin_width = self.CONST.load_store_width[opcode]
+            rs1 = tokens['rs1']
+            vd = tokens['vd']
+
+            bin_rs1 = self.get_bin_register(rs1)
+            
+            bin_vd = self.get_bin_register(vd)
+        except:
+            cp.cprint_fail("Internal Error: LOAD_STORE: could not parse" +
+                           "tokens in " + str(tokens['lineno']))
+            exit()
+
+            
+        bin_str = bin_nf + bin_mop + bin_vm + bin_lu_su_mop + bin_rs1 + bin_width + bin_vd + bin_opcode
+        assert(len(bin_str) == 32)
+
+        tok_dict = {
+            'opcode': bin_opcode,
+            'vd': bin_vd,
+            'width': bin_width,
+            'bin_rs1': bin_rs1,
+            'lu_su_mop': bin_lu_su_mop,
+            'vm': bin_vm,
+            'mop': bin_mop,
+            'bin_nf': bin_nf
+        }
+        return bin_str, tok_dict
+
+    def op_v_ld_st_stride_indexed(self, tokens):
+        '''
+        nf  mop vm (lu/su)mop rs1 width vd opcode
+        '''    
+        opcode = tokens['opcode']
+        OP_type = tokens['OP_type']
+        bin_opcode = None
+        bin_nf = None
+        bin_mop = None
+        bin_lu_su_mop = None
+        bin_width = None
+        rs1 = None
+        op2 = None
+        vd = None
+        bin_rs1 = None
+        bin_op2 = None
+        bin_vd = None
+        bin_vm = tokens['vm']   
+        try:
+            bin_nf = '000' # hardcoded(other values wont be needed)
+            if (opcode in self.CONST.V_STRIDE_ZE_LOAD):
+                bin_mop = '010'
+                bin_opcode = self.CONST.V_BOP_LOAD
+            elif(opcode in self.CONST.V_STRIDE_SE_LOAD):
+                bin_mop = '110'
+                bin_opcode = self.CONST.V_BOP_LOAD
+            elif(opcode in self.CONST.V_INDEXED_ZE_LOAD):
+                bin_mop = '011'
+                bin_opcode = self.CONST.V_BOP_LOAD
+            elif(opcode in self.CONST.V_INDEXED_SE_LOAD):
+                bin_mop = '111'
+                bin_opcode = self.CONST.V_BOP_LOAD
+            elif(opcode in self.CONST.V_STRIDE_STORE):
+                bin_mop = '010'
+                bin_opcode = self.CONST.V_BOP_STORE
+            else:
+                bin_mop = '011'
+                bin_opcode = self.CONST.V_BOP_STORE
+                
+            bin_width = self.CONST.load_store_width[opcode]
+            rs1 = tokens['rs1']
+            op2 = tokens ['op2']
+            vd = tokens['vd']
+
+            bin_rs1 = self.get_bin_register(rs1)
+            bin_op2 = self.get_bin_register(op2)                      
+            bin_vd = self.get_bin_register(vd)
+        except:
+            cp.cprint_fail("Internal Error: LOAD_STORE: could not parse" +
+                           "tokens in " + str(tokens['lineno']))
+            exit()
+
+            
+        bin_str = bin_nf + bin_mop + bin_vm + bin_op2 + bin_rs1 + bin_width + bin_vd + bin_opcode
+        assert(len(bin_str) == 32)
+
+        tok_dict = {
+            'opcode': bin_opcode,
+            'vd': bin_vd,
+            'width': bin_width,
+            'rs1': bin_rs1,
+            'op2': bin_op2,
+            'vm': bin_vm,
+            'mop': bin_mop,
+            'bin_nf': bin_nf
+        }
+        return bin_str, tok_dict
+    #********************************************************************************
     def convert_to_binary(self, tokens):
         '''
         The driver function for converting tokens to machine code.
@@ -432,6 +603,12 @@ class MachineCodeGenerator:
             return self.op_arithi(tokens)
         elif opcode in self.CONST.INSTR_BOP_ARITH:
             return self.op_arith(tokens)
+        elif opcode in self.CONST.V_INSTR_BOP_ARITH:            
+            return self.op_vector_arith(tokens)
+        elif opcode in self.CONST.ALL_V_Ld_St_unit_stride_instr:
+            return self.op_v_ld_st_unit_stride(tokens)
+        elif opcode in (self.CONST.ALL_V_Ld_St_stride_instr or SELF.ALL_V_Ld_St_INDEXED_instr):
+            return self.op_v_ld_st_stride_indexed(tokens)
         else:
             cp.cprint_fail("Error:" + str(tokens['lineno']) +
                            ": Opcode: '%s' not implemented" % opcode)

@@ -16,19 +16,28 @@ mcc = MachineCodeConst()
 tokens = (
     'OPCODE',
     'LABEL',
-    'REGISTER',
+    'REGISTER',    
+    'OP_type',
     'COMMA',
     'IMMEDIATE',
     'NEWLINE',
-    'COLUMN'
+    'COLUMN',
+    'OPEN_BRACE',
+    'CLOSE_BRACE'
+     #added by Nikola
 )
 
 '''
 Regex patters for token names are specified as t_TOKENNAME
 in ply.Tthe TOKENNAME should match one of the specified tokens.
 '''
+
+
 t_COMMA = r','
 t_COLUMN = r':'
+t_OPEN_BRACE = r'\('
+t_CLOSE_BRACE = r'\)'
+
 # For immediates, we currently only support decimal base
 # which is converted to its equivalent two's complement method.
 t_IMMEDIATE = r'[+-]?[0-9]+'
@@ -39,13 +48,18 @@ lexer.token() are instances of LexToken. This object has attributes
 tok.type, tok.value, tok.lineno, and tok.lexpos.
 '''
 
-
 def t_OPCODE(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    r'[a-zA-Z_][a-zA-Z_0-9]*'    
     if t.value in mcc.ALL_INSTR:
         t.type = "OPCODE"
         return t
     return t_LABEL(t)
+
+def t_OP_type(t):
+    r'\.[a-zA-Z]+'
+
+    t.type = "OP_type"
+    return t
 
 
 def t_LABEL(t):
@@ -57,8 +71,11 @@ def t_LABEL(t):
 
 
 def t_REGISTER(t):
-    r'\$[0-9][0-9]?'
+    r'\$[0-9][0-9]?' 
     return t
+
+
+
 
 
 # Define a rule so we can track line numbers
