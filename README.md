@@ -21,23 +21,23 @@ modify instruction opcodes - a feature currently not fully supported.
 
 ## Supported Instructions
 
-|Sl. No| I Type| R Type | U Type | UJ Type| S Type| SB Type|
-|------|-------|--------|--------|--------|-------|--------|
-|1     |addi   |add     |lui     |jal     |sw     |beq     |
-|2     |slti   |sub     |auipc   |        |sb     |bne     |
-|3     |sltiu  |sll     |        |        |sh     |blt     |
-|4     |ori    |slt     |        |        |       |bltu    |
-|5     |xori   |sltu    |        |        |       |bge     |
-|6     |andi   |xor     |        |        |       |bgeu    |
-|7     |slli   |srl     |        |        |       |        |
-|8     |srli   |sra     |        |        |       |        |
-|9     |srai   |or      |        |        |       |        |
-|10    |jalr   |and     |        |        |       |        |
-|11    |lw     |        |        |        |       |        |
-|12    |lb     |        |        |        |       |        |
-|13    |lh     |        |        |        |       |        |
-|14    |lbu    |        |        |        |       |        |
-|15    |lhu    |        |        |        |       |        |
+|Sl. No| I Type| R Type | U Type | UJ Type| S Type| SB Type|Vector|
+|------|-------|--------|--------|--------|-------|--------|------|
+|1     |addi   |add     |lui     |jal     |sw     |beq     |vadd  |
+|2     |slti   |sub     |auipc   |        |sb     |bne     |vsub  |
+|3     |sltiu  |sll     |        |        |sh     |blt     |vxor  |
+|4     |ori    |slt     |        |        |       |bltu    |vor	  |
+|5     |xori   |sltu    |        |        |       |bge     |vand  |
+|6     |andi   |xor     |        |        |       |bgeu    |	  |
+|7     |slli   |srl     |        |        |       |        |	  |
+|8     |srli   |sra     |        |        |       |        |	  |
+|9     |srai   |or      |        |        |       |        |	  |
+|10    |jalr   |and     |        |        |       |        |	  |
+|11    |lw     |        |        |        |       |        |	  |
+|12    |lb     |        |        |        |       |        |	  |
+|13    |lh     |        |        |        |       |        |	  |
+|14    |lbu    |        |        |        |       |        |	  |
+|15    |lhu    |        |        |        |       |        |	  |
 
 
 ## Installation
