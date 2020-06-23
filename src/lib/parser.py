@@ -180,7 +180,7 @@ def p_statement_SB__JALR_LABEL(p):
             'label': p[6],
             'lineno': p.lineno(1)
         }
-#**************VECTORPARSING RULE ADDED BY NIKOLA*******************
+#**************VECTOR PARSING RULES ADDED BY NIKOLA*******************
 def p_statement_vector_arith(p):
     'statement : OPCODE OP_type register COMMA register COMMA register COMMA IMMEDIATE NEWLINE'   
     if p[1] not in mcc.V_INTEGER_INSTRUCTIONS:

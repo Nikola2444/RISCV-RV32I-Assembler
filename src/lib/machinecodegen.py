@@ -414,10 +414,10 @@ class MachineCodeGenerator:
         bin_op1 = None
         bin_op2 = None
         bin_vd = None
-        bin_vm = tokens['vm']   
+        bin_vm = tokens['vm']
         try:
             funct6 = self.CONST.FUNCT6_V_ARITH_INTEGER[opcode]    
-            funct3 = self.CONST.FUNCT3_V_ARITH_INTEGER[OP_type]
+            funct3 = self.CONST.FUNCT3_V_ARITH_INTEGER[OP_type[0:3]]
             bin_opcode = self.CONST.V_BOP_ARITH
             op1 = tokens['op1']
             op2 = tokens['op2']

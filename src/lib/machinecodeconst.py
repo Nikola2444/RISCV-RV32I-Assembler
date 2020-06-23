@@ -63,6 +63,9 @@ class MachineCodeConst:
     VV_INSTR_AND = 'vand'
     VX_INSTR_AND = 'vand'
     VI_INSTR_AND = 'vand'
+    VV_INSTR_MERGE = 'vmerge'
+    VX_INSTR_MERGE = 'vmerge'
+    VI_INSTR_MERGE = 'vmerge'
     # INTEGER REDUCTION ARITHMETIC INSTRUCTIONS
     # TODO
     # FLOATING POINT ARITHMETIC INSTRUCTIONS
@@ -71,13 +74,13 @@ class MachineCodeConst:
         
     ##vector-vector instruction
     VV_INSTR_TYPE_I = [VV_INSTR_ADD, VV_INSTR_SUB, VV_INSTR_XOR,
-                       VV_INSTR_OR, VV_INSTR_AND]
+                       VV_INSTR_OR, VV_INSTR_AND, VV_INSTR_MERGE]
     ##vector-scalar instruction
     VX_INSTR_TYPE_I = [VX_INSTR_ADD, VX_INSTR_SUB, VX_INSTR_XOR,
-                       VX_INSTR_OR, VX_INSTR_AND]
+                       VX_INSTR_OR, VX_INSTR_AND, VX_INSTR_MERGE]
     ##vector-mask instruction
     VI_INSTR_TYPE_I = [VI_INSTR_ADD, VI_INSTR_SUB, VI_INSTR_XOR,
-                       VI_INSTR_OR, VI_INSTR_AND]
+                       VI_INSTR_OR, VI_INSTR_AND, VI_INSTR_MERGE]
 
     V_INTEGER_INSTRUCTIONS = VV_INSTR_TYPE_I + VI_INSTR_TYPE_I + VX_INSTR_TYPE_I    
     """****************** VECTOR LOAD INSTRUCTION OPCODES *************************"""
@@ -276,7 +279,8 @@ class MachineCodeConst:
         'vsub': '000010',        
         'vxor': '001011',
         'vor': '001010',
-        'vand': '001001'
+        'vand': '001001',
+        'vmerge': '010111'
         #... To be implemented
     }
 
