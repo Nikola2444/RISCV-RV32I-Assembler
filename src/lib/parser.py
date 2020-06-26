@@ -183,7 +183,7 @@ def p_statement_SB__JALR_LABEL(p):
 #**************VECTOR PARSING RULES ADDED BY NIKOLA*******************
 def p_statement_vector_arith(p):
     'statement : OPCODE OP_type register COMMA register COMMA register COMMA IMMEDIATE NEWLINE'   
-    if p[1] not in mcc.V_INTEGER_INSTRUCTIONS:
+    if (p[1] not in mcc.V_INTEGER_OPI_INSTRUCTIONS and p[1] not in mcc.V_INTEGER_OPM_INSTRUCTIONS):
         cp.cprint_fail("Error:" + str(p.lineno(1)) +
                        ": Incorrect opcode or arguments")
         raise SyntaxError
@@ -191,6 +191,7 @@ def p_statement_vector_arith(p):
         cp.cprint_fail("Error:" + str(p.lineno(1)) +
                        ": vm should have value 0 or 1")
         raise SyntaxError
+    #print(p[1], p[2]);
     p[0] = {
         'opcode': p[1],
         'OP_type': p[2],

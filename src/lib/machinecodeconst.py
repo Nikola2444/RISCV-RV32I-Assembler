@@ -12,12 +12,12 @@ class MachineCodeConst:
     INSTR_AUIPC = 'auipc'
     INSTR_JAL = 'jal'
     INSTR_JALR = 'jalr'
-    INSTR_BEQ = 'beq'
-    INSTR_BNE = 'bne'
-    INSTR_BLT = 'blt'
-    INSTR_BGE = 'bge'
-    INSTR_BLTU = 'bltu'
-    INSTR_BGEU = 'bgeu'
+    INSTR_BEQ = 'eq'
+    INSTR_BNE = 'ne'
+    INSTR_BLT = 'lt'
+    INSTR_BGE = 'ge'
+    INSTR_BLTU = 'ltu'
+    INSTR_BGEU = 'geu'
     INSTR_LB = 'lb'
     INSTR_LH = 'lh'
     INSTR_LW = 'lw'
@@ -50,7 +50,7 @@ class MachineCodeConst:
     # INTEGER ARITHMETIC INSTRUCTIONS
     VV_INSTR_ADD = 'vadd'
     VX_INSTR_ADD = 'vadd'
-    VI_INSTR_ADD = 'vadd'    
+    VI_INSTR_ADD = 'vadd'
     VV_INSTR_SUB = 'vsub'
     VX_INSTR_SUB = 'vsub'
     VI_INSTR_SUB = 'vsub'
@@ -64,25 +64,40 @@ class MachineCodeConst:
     VX_INSTR_AND = 'vand'
     VI_INSTR_AND = 'vand'
     VV_INSTR_MERGE = 'vmerge'
-    VX_INSTR_MERGE = 'vmerge'
+    VX_INSTR_MERGE= 'vmerge'
     VI_INSTR_MERGE = 'vmerge'
+
     # INTEGER REDUCTION ARITHMETIC INSTRUCTIONS
     # TODO
     # FLOATING POINT ARITHMETIC INSTRUCTIONS
     # TODO
 
-        
-    ##vector-vector instruction
-    VV_INSTR_TYPE_I = [VV_INSTR_ADD, VV_INSTR_SUB, VV_INSTR_XOR,
-                       VV_INSTR_OR, VV_INSTR_AND, VV_INSTR_MERGE]
-    ##vector-scalar instruction
-    VX_INSTR_TYPE_I = [VX_INSTR_ADD, VX_INSTR_SUB, VX_INSTR_XOR,
-                       VX_INSTR_OR, VX_INSTR_AND, VX_INSTR_MERGE]
-    ##vector-mask instruction
-    VI_INSTR_TYPE_I = [VI_INSTR_ADD, VI_INSTR_SUB, VI_INSTR_XOR,
-                       VI_INSTR_OR, VI_INSTR_AND, VI_INSTR_MERGE]
 
-    V_INTEGER_INSTRUCTIONS = VV_INSTR_TYPE_I + VI_INSTR_TYPE_I + VX_INSTR_TYPE_I    
+    ##****VECTOR INTEGER INSTRUCTIONS that fall into these 3 categories: OPIVV, OPIVX, OPIVI.*******
+    ##Depending on the category FUNCT3 is determined
+    #vector-vector instruction 
+    VV_OPI_INSTR_TYPE_I = [VV_INSTR_ADD, VV_INSTR_SUB, VV_INSTR_XOR,
+                       VV_INSTR_OR, VV_INSTR_AND, VV_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsltu', 'vmslt', 'vmsleu', 'vmsle', 'vminu', 'vmin']
+    #vector-scalar instruction
+    VX_OPI_INSTR_TYPE_I = [VX_INSTR_ADD, VX_INSTR_SUB, VX_INSTR_XOR,
+                       VX_INSTR_OR, VX_INSTR_AND, VX_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsltu', 'vmslt', 'vmsleu', 'vmsle', 'vmsgt, vmsgtu', 'vminu', 'vmin']
+    #vector-mask instruction
+    VI_OPI_INSTR_TYPE_I = [VI_INSTR_ADD, VI_INSTR_SUB, VI_INSTR_XOR,
+                       VI_INSTR_OR, VI_INSTR_AND, VI_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsleu', 'vmsle', 'vmsgt, vmsgtu']
+
+    V_INTEGER_OPI_INSTRUCTIONS = VV_OPI_INSTR_TYPE_I + VI_OPI_INSTR_TYPE_I + VX_OPI_INSTR_TYPE_I    
+    #*****************************************************************************************************
+    ##****VECTOR INTEGER INSTRUCTIONS that fall into these 2 categories: OPMVV, OPMVX.*******
+    #vector-vector OPM instructions
+    VV_OPM_INSTR_TYPE_I = ['vmul', 'vmulh', 'vmulhu', 'vmulhsu']
+    #vector-scalar OPM instruction
+    VX_OPM_INSTR_TYPE_I = ['vmul', 'vmulh', 'vmulhu', 'vmulhsu']
+
+    V_INTEGER_OPM_INSTRUCTIONS = VV_OPM_INSTR_TYPE_I  + VX_OPM_INSTR_TYPE_I
+    
+    
+    
+    
     """****************** VECTOR LOAD INSTRUCTION OPCODES *************************"""
 
     
@@ -152,7 +167,7 @@ class MachineCodeConst:
                  INSTR_SRLI, INSTR_SRAI, INSTR_ADD,
                  INSTR_SUB, INSTR_SLL, INSTR_SLT,
                  INSTR_SLTU, INSTR_XOR, INSTR_SRL,
-                 INSTR_SRA, INSTR_OR, INSTR_AND] + V_INTEGER_INSTRUCTIONS + ALL_V_STORE_OPCODES + ALL_V_LOAD_OPCODES
+                 INSTR_SRA, INSTR_OR, INSTR_AND] + V_INTEGER_OPI_INSTRUCTIONS + V_INTEGER_OPM_INSTRUCTIONS + ALL_V_STORE_OPCODES + ALL_V_LOAD_OPCODES
     # All instruction in a type
     INSTR_TYPE_U = [INSTR_LUI, INSTR_AUIPC]
     INSTR_TYPE_UJ = [INSTR_JAL]
@@ -219,7 +234,7 @@ class MachineCodeConst:
     
     #*********************Instruction added by Nikola Kovacevic*******************
     #Vector Arith opcode
-    V_INSTR_BOP_ARITH = VV_INSTR_TYPE_I + VX_INSTR_TYPE_I + VI_INSTR_TYPE_I
+    V_INSTR_BOP_ARITH = VV_OPI_INSTR_TYPE_I + VX_OPI_INSTR_TYPE_I + VI_OPI_INSTR_TYPE_I + VV_OPM_INSTR_TYPE_I + VX_OPM_INSTR_TYPE_I
     #******************************************************************************
     # FUNCT for each instruction type
     FUNCT3_ARITHI = {
@@ -259,7 +274,7 @@ class MachineCodeConst:
     }
 
     #*********************FUNCT3 added by Nikola Kovacevic*******************
-    FUNCT3_V_ARITH_INTEGER = {
+    FUNCT3_V_ARITH_OPI = {
         '.vv': '000',
         '.vi': '011',
         '.vx': '100',
@@ -269,9 +284,9 @@ class MachineCodeConst:
         '.vv': '001',
         '.vf': '101',
     }
-    FUNCT3_V_ARITH_INTEGER_REDUCTION = {
+    FUNCT3_V_ARITH_OPM = { # 
         '.vv': '010',
-        '.vs': '110',
+        '.vx': '110',
     }
 
     FUNCT6_V_ARITH_INTEGER = {
@@ -280,11 +295,29 @@ class MachineCodeConst:
         'vxor': '001011',
         'vor': '001010',
         'vand': '001001',
-        'vmerge': '010111'
+        'vmerge': '010111',       
+        'vmul': '100101', # signed mul #implemented
+        'vmulhsu': '100110',# signed (VS2) unsigned mul #implemented
+        'vmulh': '100111', #signed higher mul   #implemented
+        'vmulhu': '100100', # unsigned higher mul #implemented
+        'vsll': '100101', # shift left logic #implemented
+        'vsrl': '101000', # shift right logic #implemented
+        'vsra': '101001', # shift right arith #implemented
+        'vmseq': '011000 ', # set if equal #implemented
+        'vmsne': '011001 ', # set if not equal #implemented
+        'vmsltu': '011010 ', # set if less than unsigned  #implemented
+        'vmslt': '011011 ', # set if less than signed #implemented
+        'vmsleu': '011100 ', # set if less than or equal unsigned #implemented
+        'vmsle': '011101 ', # set if less than or equal signed #implemented
+        'vmsgtu': '011110 ', # set if greater than or equal unsigned #implemented
+        'vmsgt': '011111 ', # set if greater than or equal signed #implemented
+        'vminu': '000100 ', # unsigned min #implemented
+        'vmin': '000101 ', # signed min   #implemented
+
         #... To be implemented
     }
-
-    #*********************CONSTANTS added by Nikola Kovacevic*************************
+    #*******************
+    #**CONSTANTS added by Nikola Kovacevic*************************
     #constants needed for vector loads/stores
     """Vector_load_mop"""
     load_store_width = {
@@ -355,3 +388,8 @@ class MachineCodeConst:
         INSTR_BLTU: '110',
         INSTR_BGEU: '111'
     }
+
+
+   
+   
+

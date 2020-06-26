@@ -415,9 +415,14 @@ class MachineCodeGenerator:
         bin_op2 = None
         bin_vd = None
         bin_vm = tokens['vm']
+        print (OP_type, opcode)        
         try:
-            funct6 = self.CONST.FUNCT6_V_ARITH_INTEGER[opcode]    
-            funct3 = self.CONST.FUNCT3_V_ARITH_INTEGER[OP_type[0:3]]
+            funct6 = self.CONST.FUNCT6_V_ARITH_INTEGER[opcode]
+            if (OP_type[0:3] in self.CONST.FUNCT3_V_ARITH_OPI and opcode in self.CONST.V_INTEGER_OPI_INSTRUCTIONS):
+                funct3 = self.CONST.FUNCT3_V_ARITH_OPI[OP_type[0:3]]
+            elif (OP_type[0:3] in self.CONST.FUNCT3_V_ARITH_OPM):
+                funct3 = self.CONST.FUNCT3_V_ARITH_OPM[OP_type[0:3]]
+                print (funct3)
             bin_opcode = self.CONST.V_BOP_ARITH
             op1 = tokens['op1']
             op2 = tokens['op2']
