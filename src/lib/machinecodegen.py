@@ -436,6 +436,7 @@ class MachineCodeGenerator:
             exit()
 
         bin_str = funct6 + bin_vm + bin_op2 + bin_op1 + funct3 + bin_vd + bin_opcode
+        
         assert(len(bin_str) == 32)
 
         tok_dict = {

@@ -80,10 +80,10 @@ class MachineCodeConst:
                        VV_INSTR_OR, VV_INSTR_AND, VV_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsltu', 'vmslt', 'vmsleu', 'vmsle', 'vminu', 'vmin']
     #vector-scalar instruction
     VX_OPI_INSTR_TYPE_I = [VX_INSTR_ADD, VX_INSTR_SUB, VX_INSTR_XOR,
-                       VX_INSTR_OR, VX_INSTR_AND, VX_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsltu', 'vmslt', 'vmsleu', 'vmsle', 'vmsgt, vmsgtu', 'vminu', 'vmin']
+                       VX_INSTR_OR, VX_INSTR_AND, VX_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsltu', 'vmslt', 'vmsleu', 'vmsle', 'vmsgt', 'vmsgtu', 'vminu', 'vmin']
     #vector-mask instruction
     VI_OPI_INSTR_TYPE_I = [VI_INSTR_ADD, VI_INSTR_SUB, VI_INSTR_XOR,
-                       VI_INSTR_OR, VI_INSTR_AND, VI_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsleu', 'vmsle', 'vmsgt, vmsgtu']
+                       VI_INSTR_OR, VI_INSTR_AND, VI_INSTR_MERGE, 'vsll', 'vsrl', 'vsra', 'vmseq', 'vmsne', 'vmsleu', 'vmsle', 'vmsgt', 'vmsgtu']
 
     V_INTEGER_OPI_INSTRUCTIONS = VV_OPI_INSTR_TYPE_I + VI_OPI_INSTR_TYPE_I + VX_OPI_INSTR_TYPE_I    
     #*****************************************************************************************************
@@ -303,16 +303,16 @@ class MachineCodeConst:
         'vsll': '100101', # shift left logic #implemented
         'vsrl': '101000', # shift right logic #implemented
         'vsra': '101001', # shift right arith #implemented
-        'vmseq': '011000 ', # set if equal #implemented
-        'vmsne': '011001 ', # set if not equal #implemented
-        'vmsltu': '011010 ', # set if less than unsigned  #implemented
-        'vmslt': '011011 ', # set if less than signed #implemented
-        'vmsleu': '011100 ', # set if less than or equal unsigned #implemented
-        'vmsle': '011101 ', # set if less than or equal signed #implemented
-        'vmsgtu': '011110 ', # set if greater than or equal unsigned #implemented
-        'vmsgt': '011111 ', # set if greater than or equal signed #implemented
-        'vminu': '000100 ', # unsigned min #implemented
-        'vmin': '000101 ', # signed min   #implemented
+        'vmseq': '011000', # set if equal #implemented
+        'vmsne': '011001', # set if not equal #implemented
+        'vmsltu': '011010', # set if less than unsigned  #implemented
+        'vmslt': '011011', # set if less than signed #implemented
+        'vmsleu': '011100', # set if less than or equal unsigned #implemented
+        'vmsle': '011101', # set if less than or equal signed #implemented
+        'vmsgtu': '011110', # set if greater than or equal unsigned #implemented
+        'vmsgt': '011111', # set if greater than or equal signed #implemented
+        'vminu': '000100', # unsigned min #implemented
+        'vmin': '000101', # signed min   #implemented
 
         #... To be implemented
     }
