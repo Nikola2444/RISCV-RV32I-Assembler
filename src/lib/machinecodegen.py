@@ -399,56 +399,117 @@ class MachineCodeGenerator:
         return bin_str, tok_dict
 
     #****************Modifications writen by Nikola******************************
-    def op_vector_arith(self, tokens):
+    def op_vsetvli_configuration(self, tokens):
         '''
-        funct6  vm op1 op2 funct3  vxd  opcode
+        1  zimm rs1 funct3  rd  opcode
         '''
-        opcode = tokens['opcode']
-        OP_type = tokens['OP_type']
-        bin_opcode = None
-        funct3 = None
-        funct6 = None
-        op1 = None
-        op2 = None
-        vd = None
-        bin_op1 = None
-        bin_op2 = None
-        bin_vd = None
-        bin_vm = tokens['vm']
-        print (OP_type, opcode)        
-        try:
-            funct6 = self.CONST.FUNCT6_V_ARITH_INTEGER[opcode]
-            if (OP_type[0:3] in self.CONST.FUNCT3_V_ARITH_OPI and opcode in self.CONST.V_INTEGER_OPI_INSTRUCTIONS):
-                funct3 = self.CONST.FUNCT3_V_ARITH_OPI[OP_type[0:3]]
-            elif (OP_type[0:3] in self.CONST.FUNCT3_V_ARITH_OPM):
-                funct3 = self.CONST.FUNCT3_V_ARITH_OPM[OP_type[0:3]]
-                print (funct3)
+        opcode = tokens['opcode']        
+        bin_opcode = None        
+        rs1 = None
+        rd = None
+        bin_rs1 = None
+        bin_rd = None
+        zimm = None
+        bin_zimm = None
+        try:            
+            
+            funct3 = '111'
+            print (funct3)
+
             bin_opcode = self.CONST.V_BOP_ARITH
-            op1 = tokens['op1']
-            op2 = tokens['op2']
-            vd = tokens['vd']
-            bin_op1 = self.get_bin_register(op1)
-            bin_op2 = self.get_bin_register(op2)
-            bin_vd = self.get_bin_register(vd)
+            
+            rs1 = tokens['rs1']
+            
+            rd = tokens['rd']
+            print (tokens['imm'])
+            zimm = int(tokens ['imm'])
+
+            if zimm == 1:
+                bin_zimm = format(0, '011b')
+            elif zimm == 2:
+                bin_zimm = format(1, '011b')
+            elif zimm == 4:
+                bin_zimm = format(2, '011b')
+            elif zimm == 8:
+                bin_zimm = format(3, '011b')
+            else:
+                cp.cprint_fail("Incorect value for VMUL:"  + str(tokens['zimm']))
+                exit()
+            print (bin_zimm)
+            bin_rs1 = self.get_bin_register(rs1)
+            bin_rd = self.get_bin_register(rd)
+            
         except:
             cp.cprint_fail("Internal Error: ARITH: could not parse" +
                            "tokens in " + str(tokens['lineno']))
             exit()
 
-        bin_str = funct6 + bin_vm + bin_op2 + bin_op1 + funct3 + bin_vd + bin_opcode
+        bin_str = '0' + bin_zimm + bin_rs1 + funct3 + bin_rd + bin_opcode
         
         assert(len(bin_str) == 32)
 
         tok_dict = {
-            'opcode': bin_opcode,
-            'funct3': funct3,
-            'funct6': funct6,
-            'op1': bin_op1,
-            'vd': bin_vd,
-            'op2': bin_op2,
-            'vm': bin_vm
+            'opcode': bin_opcode,            
+            'rs1': bin_rs1,
+            'rd': bin_rd,
+            'zimm': bin_zimm
         }
         return bin_str, tok_dict
+
+    
+    def op_vector_arith(self, tokens):
+        '''
+        funct6  vm op1 op2 funct3  vxd  opcode
+        '''
+        if (tokens['opcode'] == 'vsetvli'):
+            return self.op_vsetvli_configuration(tokens)
+        else:
+            opcode = tokens['opcode']
+            OP_type = tokens['OP_type']
+            bin_opcode = None
+            funct3 = None
+            funct6 = None
+            op1 = None
+            op2 = None
+            vd = None
+            bin_op1 = None
+            bin_op2 = None
+            bin_vd = None
+            bin_vm = tokens['vm']
+            print (OP_type, opcode)        
+            try:
+                funct6 = self.CONST.FUNCT6_V_ARITH_INTEGER[opcode]
+                if (OP_type[0:3] in self.CONST.FUNCT3_V_ARITH_OPI and opcode in self.CONST.V_INTEGER_OPI_INSTRUCTIONS):
+                    funct3 = self.CONST.FUNCT3_V_ARITH_OPI[OP_type[0:3]]
+                elif (OP_type[0:3] in self.CONST.FUNCT3_V_ARITH_OPM):
+                    funct3 = self.CONST.FUNCT3_V_ARITH_OPM[OP_type[0:3]]
+                print (funct3)
+                bin_opcode = self.CONST.V_BOP_ARITH
+                op1 = tokens['op1']
+                op2 = tokens['op2']
+                vd = tokens['vd']
+                bin_op1 = self.get_bin_register(op1)
+                bin_op2 = self.get_bin_register(op2)
+                bin_vd = self.get_bin_register(vd)
+            except:
+                cp.cprint_fail("Internal Error: ARITH: could not parse" +
+                           "tokens in " + str(tokens['lineno']))
+                exit()
+
+            bin_str = funct6 + bin_vm + bin_op2 + bin_op1 + funct3 + bin_vd + bin_opcode
+        
+            assert(len(bin_str) == 32)
+
+            tok_dict = {
+            'opcode': bin_opcode,
+                'funct3': funct3,
+                'funct6': funct6,
+                'op1': bin_op1,
+                'vd': bin_vd,
+                'op2': bin_op2,
+                'vm': bin_vm
+            }
+            return bin_str, tok_dict
 
 
     def op_v_ld_st_unit_stride(self, tokens):
@@ -574,6 +635,10 @@ class MachineCodeGenerator:
             'bin_nf': bin_nf
         }
         return bin_str, tok_dict
+
+
+
+
     #********************************************************************************
     def convert_to_binary(self, tokens):
         '''
@@ -614,7 +679,7 @@ class MachineCodeGenerator:
         elif opcode in self.CONST.ALL_V_Ld_St_unit_stride_instr:
             return self.op_v_ld_st_unit_stride(tokens)
         elif opcode in (self.CONST.ALL_V_Ld_St_stride_instr or SELF.ALL_V_Ld_St_INDEXED_instr):
-            return self.op_v_ld_st_stride_indexed(tokens)
+            return self.op_v_ld_st_stride_indexed(tokens)       
         else:
             cp.cprint_fail("Error:" + str(tokens['lineno']) +
                            ": Opcode: '%s' not implemented" % opcode)

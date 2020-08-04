@@ -67,7 +67,7 @@ def p_statement_R(p):
 
 def p_statement_I_S_SB(p):
     'statement : OPCODE register COMMA register COMMA IMMEDIATE NEWLINE'
-    if (p[1] not in mcc.INSTR_TYPE_I) and (p[1] not in mcc.INSTR_TYPE_S)and (p[1] not in mcc.INSTR_TYPE_SB):
+    if (p[1] not in mcc.INSTR_TYPE_I) and (p[1] not in mcc.INSTR_TYPE_S)and (p[1] not in mcc.INSTR_TYPE_SB) and (p[1] not in mcc.VSETVLI):
         cp.cprint_fail("Error:" + str(p.lineno(1)) +
                        ": Incorrect opcode or arguments")
         raise SyntaxError
@@ -94,6 +94,15 @@ def p_statement_I_S_SB(p):
             'rs1': p[2],
             'rs2': p[4],
             'imm': imm,
+            'lineno': p.lineno(1)
+        }
+    #added for vector extension instructions
+    elif p[1] in mcc.VSETVLI:        
+        p[0] = {
+            'opcode': p[1],
+            'rd': p[2],
+            'rs1': p[4],
+            'imm': p[6],
             'lineno': p.lineno(1)
         }
     else:  # SB (BRANCH)
@@ -243,6 +252,7 @@ def p_statement_vector_strided_indexed_load_store(p):
         'vm' : p[11],
         'lineno': p.lineno(1)
     }
+
 
 #*******************************************************************
 def p_register(p):

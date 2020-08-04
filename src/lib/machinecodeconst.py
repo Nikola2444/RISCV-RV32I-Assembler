@@ -153,6 +153,12 @@ class MachineCodeConst:
     ALL_V_Ld_St_INDEXED_instr = V_INDEXED_STORE + V_INDEXED_ZE_LOAD + V_INDEXED_SE_LOAD
     
 
+
+    """***************** VECTOR CONFIGURATION INSTRUCTION OPCODES ***************************"""
+
+    VSETVLI = ['vsetvli']
+
+    VECTOR_CONFIGURATION_INSTRUCTIONS = VSETVLI;
     #******************************************************************************
 
     
@@ -167,7 +173,7 @@ class MachineCodeConst:
                  INSTR_SRLI, INSTR_SRAI, INSTR_ADD,
                  INSTR_SUB, INSTR_SLL, INSTR_SLT,
                  INSTR_SLTU, INSTR_XOR, INSTR_SRL,
-                 INSTR_SRA, INSTR_OR, INSTR_AND] + V_INTEGER_OPI_INSTRUCTIONS + V_INTEGER_OPM_INSTRUCTIONS + ALL_V_STORE_OPCODES + ALL_V_LOAD_OPCODES
+                 INSTR_SRA, INSTR_OR, INSTR_AND] + V_INTEGER_OPI_INSTRUCTIONS + V_INTEGER_OPM_INSTRUCTIONS + ALL_V_STORE_OPCODES + ALL_V_LOAD_OPCODES + VSETVLI
     # All instruction in a type
     INSTR_TYPE_U = [INSTR_LUI, INSTR_AUIPC]
     INSTR_TYPE_UJ = [INSTR_JAL]
@@ -234,7 +240,7 @@ class MachineCodeConst:
     
     #*********************Instruction added by Nikola Kovacevic*******************
     #Vector Arith opcode
-    V_INSTR_BOP_ARITH = VV_OPI_INSTR_TYPE_I + VX_OPI_INSTR_TYPE_I + VI_OPI_INSTR_TYPE_I + VV_OPM_INSTR_TYPE_I + VX_OPM_INSTR_TYPE_I
+    V_INSTR_BOP_ARITH = VV_OPI_INSTR_TYPE_I + VX_OPI_INSTR_TYPE_I + VI_OPI_INSTR_TYPE_I + VV_OPM_INSTR_TYPE_I + VX_OPM_INSTR_TYPE_I + VECTOR_CONFIGURATION_INSTRUCTIONS
     #******************************************************************************
     # FUNCT for each instruction type
     FUNCT3_ARITHI = {
@@ -288,6 +294,7 @@ class MachineCodeConst:
         '.vv': '010',
         '.vx': '110',
     }
+
 
     FUNCT6_V_ARITH_INTEGER = {
         'vadd': '000000',
