@@ -30,6 +30,9 @@ def get_arguments():
     ap.add_argument('-x', "--hex", action="store_true",
                     help="Output generated code in hexadecimal format" +
                     " instead of binary.")
+    ap.add_argument('-c', "--c_code", action="store_true",
+                    help="Output generated code is c array in hex format" +
+                    " instead of binary.")
     ap.add_argument('-t', '--tokenize', action="store_true",
                     help="Echo tokenized instructions to console" +
                     " for debugging.")

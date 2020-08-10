@@ -593,6 +593,8 @@ def parse_pass_two(fin, fout, symbols_table, args):
     # Reset line number state
     reset_lineno()
     address = 0
+    if args['c_code']:
+        fout.write('u32 instruction_array[]= { ' + '\n')
     for line in fin:
         result = parser.parse(line)
         if result["tokens"] is None:
@@ -619,6 +621,8 @@ def parse_pass_two(fin, fout, symbols_table, args):
         # Use hex instead of binary
         if args['hex']:
             instr = '%08X' % int(instr, 2)
+        if args['c_code']:
+            instr = '0x'+'%08X,' % int(instr, 2)
         # Echo to console
         if args['echo']:
             cp.cprint_msgb(str(result['lineno']) + " " + str(instr))
@@ -628,7 +632,10 @@ def parse_pass_two(fin, fout, symbols_table, args):
 
         fout.write(instr + '\n')
         address += 4
-
+        
+    if args['c_code']:
+        fout.seek(fout.tell() - 2)
+        fout.write('};')
 
 def parse_input(infile, **kwargs):
     if kwargs['no_color']:
